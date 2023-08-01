@@ -125,15 +125,14 @@ jobs:
 workflows:
   build-test-deploy-workflow:
     jobs:
-      # - build
-      - test
-      # - test:
-      #     requires:
-      #       - build
-      # - deploy:
-      #     requires:
-      #       - build
-      #       - test
+      - build
+      - test:
+          requires:
+            - build
+      - deploy:
+          requires:
+            - build
+            - test
 
 
 
