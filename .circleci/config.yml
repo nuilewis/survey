@@ -55,6 +55,10 @@ jobs:
           test-command: ./gradlew connectedAndroidTest
       - android/save-gradle-cache:
           cache-prefix: v1
+          
+      - store_artifacts:
+          name: Store Test Results
+          path: services_app/build/outputs/androidTest-results
 
   build:
     docker:
@@ -89,6 +93,11 @@ jobs:
       - run:
           name: Build Services
           command: ./gradlew assemble
+
+      - store_artifacts:
+          name: Store Build Artifacts
+          path: services_app/build/outputs/apk
+      
 
 workflows:
   build-test-deploy-workflow:
