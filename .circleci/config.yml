@@ -58,7 +58,7 @@ jobs:
           
       - store_artifacts:
           name: Store Test Results
-          path: services_app/build/outputs/androidTest-results
+          path: survey_app/build/outputs/androidTest-results
 
   build:
     docker:
@@ -91,12 +91,12 @@ jobs:
       - android/save-gradle-cache:
           cache-prefix: v1
       - run:
-          name: Build Services
+          name: Build Survey
           command: ./gradlew assemble
 
       - store_artifacts:
           name: Store Build Artifacts
-          path: services_app/build/outputs/apk
+          path: survey_app/build/outputs/apk
       
 
 workflows:
