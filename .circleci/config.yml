@@ -97,9 +97,29 @@ jobs:
           name: Build Survey
           command: ./gradlew assemble
 
+      - persist_to_workspace:
+          root: .
+          paths:
+            - "survey_app/build/outputs"
+
       - store_artifacts:
           name: Store Build Artifacts
           path: survey_app/build/outputs/apk
+
+  deploy:
+    docker:
+      - image: cimg/go:1.21.6
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Deploy Build to Github
+          command: |
+            go install github.com/tcnksm/ghr@latest
+            echo "export SHORT_HASH=$(echo $CIRCLE_SHA1 | cut -c -7)" >> $BASH_ENV
+            VERSION=v1
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} ./survey_app/build/outputs/apk/demoBasic/debug/survey_app-demo-basic-debug.apk
+
 
 
 workflows:
@@ -109,4 +129,6 @@ workflows:
       - test:
           requires:
             - build
-
+      - deploy:
+          requires:
+            - build
